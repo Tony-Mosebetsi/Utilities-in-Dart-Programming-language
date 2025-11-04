@@ -1,0 +1,193 @@
+1. String Manipulation
+  // *****************************************************************
+  print('**1. String Manipulation**');
+  
+  String firstName = 'soh';
+  String lastName = 'DEVELOPER';
+  String originalPhrase = 'Dart is efficient and fun.';
+  
+  // Concatenation and Interpolation
+  String fullName = firstName + ' ' + lastName; // Concatenation
+  String greeting = 'Hello, $fullName! Your first name is ${firstName.length} characters long.'; // Interpolation
+  print('Greeting (Concatenation & Interpolation): $greeting');
+  
+  // Case Conversion
+  print('Uppercase: ${fullName.toUpperCase()}');
+  print('Lowercase: ${fullName.toLowerCase()}');
+
+  // Substring Extraction
+  // Get the word 'efficient' (starts at index 9, ends before index 19)
+  String extractedWord = originalPhrase.substring(9, 19); 
+  print('Substring Extraction: The word is "$extractedWord"');
+  
+  // Reverse a String
+  String reversedPhrase = originalPhrase.split('').reversed.join('');
+  print('Reversed String: "$reversedPhrase"');
+  
+  // Count Length
+  print('Original Phrase Length: ${originalPhrase.length}');
+  
+  print('\n--------------------------------------------\n');
+
+  // *****************************************************************
+  // 2. Collections (Lists, Sets, Maps)
+  // *****************************************************************
+  print('**2. Collections (Lists, Sets, Maps)**');
+
+  // --- List (Ordered collection, allows duplicates) ---
+  List<String> shoppingList = ['Milk', 'Bread', 'Eggs', 'Milk'];
+  print('List (Shopping): $shoppingList');
+  shoppingList.add('Cheese'); // Adding an item
+  shoppingList.removeAt(0); // Removing by index (Milk)
+  print('List after Add/Remove: $shoppingList');
+  
+  // Iteration (Foreach)
+  print('List Iteration:');
+  for (String item in shoppingList) {
+    print('- $item');
+  }
+
+  // --- Set (Unordered collection, no duplicates) ---
+  Set<String> uniqueTags = {'OOP', 'Functional', 'Testing', 'OOP'}; // 'OOP' only stored once
+  print('Set (Unique Tags): $uniqueTags');
+  uniqueTags.add('Async'); // Adding an item
+  uniqueTags.remove('Functional'); // Removing an item
+  print('Set after Add/Remove: $uniqueTags');
+  
+  // Scenario: Sets are ideal for checking unique items quickly.
+  if (uniqueTags.contains('Async')) {
+    print('Scenario: The "Async" tag exists in the unique set.');
+  }
+
+  // --- Map (Key-Value pairs) ---
+  Map<String, double> productPrices = {
+    'Laptop': 15500.00,
+    'Monitor': 3200.00,
+    'Mouse': 450.00,
+  };
+  print('Map (Product Prices): $productPrices');
+  productPrices['Keyboard'] = 799.00; // Adding a key-value pair
+  productPrices.remove('Mouse'); // Removing by key
+  print('Map after Add/Remove: $productPrices');
+  
+  // Iteration (Iterate over Keys and Values)
+  print('Map Iteration (Product Name: Price):');
+  productPrices.forEach((key, value) {
+    print('Product: $key, Price: ${CURRENCY_SYMBOL}${value.toStringAsFixed(2)}');
+  });
+
+  print('\n--------------------------------------------\n');
+
+  // *****************************************************************
+  // 3. Date and Time
+  // *****************************************************************
+  print('**3. Date and Time**');
+
+  // Current Date and Time
+  DateTime now = DateTime.now();
+  print('Current Date/Time (Raw): $now');
+  
+  // Formatting (Simple Interpolation)
+  String formattedDate = '${now.day}/${now.month}/${now.year} at ${now.hour}:${now.minute}';
+  print('Formatted Date: $formattedDate');
+  
+  // Parsing a Date String
+  DateTime parsedDate = DateTime.parse('2025-11-04 15:30:00');
+  print('Parsed Date: $parsedDate');
+
+  // Manipulation (Add/Subtract Days)
+  DateTime futureDate = now.add(const Duration(days: 7));
+  DateTime pastDate = now.subtract(const Duration(days: 3));
+  print('Date + 7 Days: $futureDate');
+  print('Date - 3 Days: $pastDate');
+  
+  // Calculate Difference
+  Duration difference = futureDate.difference(now);
+  print('Difference (Duration): ${difference.inDays} days and ${difference.inHours % 24} hours.');
+
+  print('\n--------------------------------------------\n');
+
+  // *****************************************************************
+  // 4. File Handling (Demonstration)
+  // *****************************************************************
+  print('**4. File Handling (Write/Read/Error)**');
+  
+  final inputFile = File('input_data.txt');
+  final outputFile = File('log_results.txt');
+
+  try {
+    // Writing data to a file
+    String dataToWrite = 'This is a test line written at ${DateTime.now()}.';
+    await outputFile.writeAsString(dataToWrite);
+    print('Successfully wrote: "$dataToWrite" to ${outputFile.path}');
+
+    // Reading content from the file we just created
+    String content = await outputFile.readAsString();
+    print('Successfully read content: "$content" from ${outputFile.path}');
+    
+  } catch (e) {
+    // Error Handling (e.g., if permissions are denied)
+    print('An error occurred during file operation: $e');
+  }
+
+  print('\n--------------------------------------------\n');
+
+  // *****************************************************************
+  // 5. Exercise: Combine Utilities (Small Application)
+  // *****************************************************************
+  print('**5. Exercise: Combined Application**');
+  
+  await runCombinedApplication();
+}
+
+/// Combines String, Collection, Date/Time, and File utilities.
+Future<void> runCombinedApplication() async {
+  // Collection to store structured results (Map is ideal for structured data)
+  List<Map<String, dynamic>> logEntries = [];
+  final logFile = File('app_log.json');
+  
+  // --- A. String Manipulation on User Input ---
+  stdout.write('Please enter a phrase to process: ');
+  String? userInput = stdin.readLineSync();
+
+  if (userInput == null || userInput.isEmpty) {
+    print('Input cancelled or empty. Application shutting down.');
+    return;
+  }
+  
+  // Perform string manipulation
+  String processedString = userInput.trim().toUpperCase();
+  int length = processedString.length;
+  String reversed = processedString.split('').reversed.join('');
+  
+  print('\nProcessed String (Uppercase): "$processedString"');
+  print('String Reversed: "$reversed"');
+  
+  // --- B. Store Results in a Collection (Map/List) ---
+  DateTime logTime = DateTime.now();
+  
+  Map<String, dynamic> newEntry = {
+    'input': userInput,
+    'processed': processedString,
+    'length': length,
+    'reversed': reversed,
+    'timestamp': logTime.toIso8601String(), // Log entry time
+  };
+  
+  logEntries.add(newEntry);
+  print('Stored results in collection (1 entry added).');
+  
+  // --- C. Save Data to a File with Error Handling ---
+  try {
+    // In a real application, we would first read existing data, 
+    // but for demonstration, we'll append the new entry.
+    
+    // Convert the List of Maps to a JSON string
+    String jsonContent = jsonEncode(logEntries); 
+    
+    // Write the JSON data to the file
+    await logFile.writeAsString(jsonContent);
+    print('✅ Data successfully saved to ${logFile.path} at ${logTime.toString().split('.')[0]}');
+
+  } catch (e) {
+    print('❌ ERROR saving data to file: $e');
